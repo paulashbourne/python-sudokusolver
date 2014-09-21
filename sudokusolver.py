@@ -141,7 +141,7 @@ class Puzzle():
                 s+="\n"
             for y in range(0,9):
                 if y % 3 == 0 and y != 0:
-                    s+="| "
+                    s+="|  "
                 cell = self.cells[x][y]
                 v = str(cell.value) if cell.value else " "
                 s+="|%s" %  v
@@ -167,11 +167,12 @@ def main():
     else:
         values = []
     p = Puzzle(values)
+    print "\nGiven puzzle:\n%s" % p.toString()
     solution = p.solve()
     if not solution:
         print "The puzzle has no solution!"
     else:
-        print(p.toString())
+        print "Solution:\n%s" % p.toString()
 
 if __name__ == "__main__":
     main()
