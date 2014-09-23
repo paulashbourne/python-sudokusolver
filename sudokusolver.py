@@ -43,20 +43,25 @@ class Puzzle():
         if solution:
             return solution
         else:
-            v = None # find first empty cell
+            v = None # find cell with least number of possible numbers
+            minPoss = 10
             for r in range(0,9):
                 for c in range(0,9):
                     if not self.cells[r][c].value:
-                        x = r
-                        y = c
-                        v = self.cells[r][c].possibleValues[0]
-                        break
-                if v:
+                        numPoss = len(self.cells[r][c].possibleValues)
+                        if numPoss < minPoss:
+                            x = r
+                            y = c
+                            minPoss = numPoss
+                            if minPoss == 2: #lowest possible, break
+                                break
+                if minPoss == 2: # lowest possible, break
                     break
             # copy puzzle, make guess in first empty cell of new puzzle
+            guess = self.cells[x][y].possibleValues[0]
             new = deepcopy(self)
-            new.cells[x][y].setValue(v)
-            new.eliminate(x,y,v)
+            new.cells[x][y].setValue(guess)
+            new.eliminate(x,y,guess)
             solution = new.solve() # recursive call
             if solution:
                 # the solution to the new puzzle is a solution to this puzzle
@@ -65,7 +70,7 @@ class Puzzle():
             else:
                 # new puzzle has no solution, therefore that guess was wrong
                 # eliminate guessed value from list of possible values
-                found = self.cells[x][y].eliminateValue(v)
+                found = self.cells[x][y].eliminateValue(guess)
                 if found:
                     self.eliminate(x,y,found)
                 return self.solve()
